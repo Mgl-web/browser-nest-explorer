@@ -1,23 +1,30 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { ClientOnly, createFileRoute } from "@tanstack/react-router";
+import { BootScreen, BrowserApp } from "@/components/browser/BrowserApp";
 
-// The home route ships no og:image, so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Janela — um navegador dentro do seu navegador" },
+      {
+        name: "description",
+        content: "Janela é um navegador completo no site: abas arrastáveis, busca, favoritos, histórico e temas de vidro fosco.",
+      },
+      { property: "og:title", content: "Janela — um navegador dentro do seu navegador" },
+      {
+        property: "og:description",
+        content: "Abas, favoritos, histórico e temas lindos — tudo rodando dentro de uma página.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <ClientOnly fallback={<BootScreen />}>
+      <BrowserApp />
+    </ClientOnly>
   );
 }
